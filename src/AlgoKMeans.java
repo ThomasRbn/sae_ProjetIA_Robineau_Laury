@@ -1,8 +1,7 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class AlgoKMeans {
 
@@ -27,7 +26,7 @@ public class AlgoKMeans {
                 }
             }
 
-            int nbCoul = 100;
+            int nbCoul = 20;
             int nbIteration = 0;
             int maxIterations = 100;
 
@@ -84,45 +83,45 @@ public class AlgoKMeans {
             }
 
             // Remplacement des pixels par les couleurs des centres de cluster
-            BufferedImage quantizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            BufferedImage destination = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             index = 0;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    int closestCenterIndex = 0;
+                    int indiceCentrePlusProche = 0;
                     float minDistance = Float.MAX_VALUE;
 
                     for (int i = 0; i < nbCoul; i++) {
                         float distance = getDistance(pixels[index], centroides[i]);
                         if (distance < minDistance) {
                             minDistance = distance;
-                            closestCenterIndex = i;
+                            indiceCentrePlusProche = i;
                         }
                     }
 
-                    Color newColor = new Color((int) centroides[closestCenterIndex][0],
-                            (int) centroides[closestCenterIndex][1], (int) centroides[closestCenterIndex][2]);
-                    quantizedImage.setRGB(x, y, newColor.getRGB());
+                    Color newColor = new Color((int) centroides[indiceCentrePlusProche][0],
+                            (int) centroides[indiceCentrePlusProche][1], (int) centroides[indiceCentrePlusProche][2]);
+                    destination.setRGB(x, y, newColor.getRGB());
 
                     index++;
                 }
             }
 
             // Enregistrer l'image de sortie
-            ImageIO.write(quantizedImage, "png", new File("images/copieKMeans_" + nbCoul + ".png"));
+            ImageIO.write(destination, "png", new File("images/copieKMeans_" + nbCoul + ".png"));
             long fin = System.currentTimeMillis();
             System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static float getDistance(float[] pixel1, float[] pixel2) {
-        float sum = 0.0f;
-        for (int i = 0; i < pixel1.length; i++) {
-            float diff = pixel1[i] - pixel2[i];
-            sum += diff * diff;
-        }
-        return (float) Math.sqrt(sum);
+    private static int getDistance(float[] pixel1, float[] pixel2) {
+        int distanceRouge = (int) Math.pow(pixel1[0] - pixel2[0], 2);
+        int distanceVert = (int) Math.pow(pixel1[1] - pixel2[1], 2);
+        int distanceBleu = (int) Math.pow(pixel1[2] - pixel2[2], 2);
+
+        return distanceRouge + distanceVert + distanceBleu;
     }
 
     private static boolean hasConverged(float[][] vCentroides, float[][] nCentroides) {
@@ -134,3 +133,5 @@ public class AlgoKMeans {
         return true;
     }
 }
+
+

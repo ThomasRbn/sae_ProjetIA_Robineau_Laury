@@ -2,7 +2,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -63,11 +62,6 @@ public class AlgoV2 {
         ImageIO.write(destination, "png", new File("images/copieAlgoV2_" + decomposition + "_" + nbCouleurs + ".png"));
         long fin = System.currentTimeMillis();
         System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
-
-        File fichierResultats = new File("resultatsExecution.txt");
-        FileWriter writer = new FileWriter(fichierResultats);
-        writer.write("AlgoV2 " + nbCouleurs + " couleurs : " + (fin - debut) + " ms");
-        writer.close();
     }
 
     public static Color getColorRange(Color c, HashMap<Color, Integer> range, int decomposition) {
