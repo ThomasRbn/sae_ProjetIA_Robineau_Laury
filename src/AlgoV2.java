@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -38,7 +39,7 @@ public class AlgoV2 {
             }
         }
 
-        Color[] selection = AlgoV1.getMostUsedColors(nbCouleurs, composition);
+        Color[] selection = getMostUsedColors(nbCouleurs, composition);
 
         BufferedImage destination = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 
@@ -46,10 +47,10 @@ public class AlgoV2 {
             for (int y = 0; y < source.getHeight(); y++) {
 
                 Color pixel = new Color(source.getRGB(x, y));
-                int distanceMin = AlgoV1.getDistance(pixel, selection[0]);
+                int distanceMin = Distance.getDistanceCouleur(pixel, selection[0]);
                 Color colorMin = selection[0];
                 for (int i = 1; i < selection.length; i++) {
-                    int distance = AlgoV1.getDistance(pixel, selection[i]);
+                    int distance = Distance.getDistanceCouleur(pixel, selection[i]);
                     if (distance < distanceMin) {
                         distanceMin = distance;
                         colorMin = selection[i];
@@ -62,6 +63,11 @@ public class AlgoV2 {
         ImageIO.write(destination, "png", new File("images/copieAlgoV2_" + decomposition + "_" + nbCouleurs + ".png"));
         long fin = System.currentTimeMillis();
         System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
+
+        File fichierResultats = new File("resultatsExecution.txt");
+        FileWriter writer = new FileWriter(fichierResultats);
+        writer.write("AlgoV2 " + nbCouleurs + " couleurs : " + (fin - debut) + " ms");
+        writer.close();
     }
 
     public static Color getColorRange(Color c, HashMap<Color, Integer> range, int decomposition) {
@@ -79,5 +85,35 @@ public class AlgoV2 {
             }
         }
         return null;
+    }
+
+    public static Color[] getMostUsedColors(int nbColors, HashMap<Color, Integer> compo) {
+        Color[] colors = new Color[nbColors];
+        int[] values = new int[nbColors];
+        int i = 0;
+        for (Color color : compo.keySet()) {
+            int value = compo.get(color);
+            if (i < nbColors) {
+                colors[i] = color;
+                values[i] = value;
+                i++;
+            } else {
+                int min = 0;
+                for (int j = 0; j < nbColors; j++) {
+                    if (values[j] < values[min]) {
+                        min = j;
+                    }
+                }
+                if (value > values[min]) {
+                    colors[min] = color;
+                    values[min] = value;
+                }
+            }
+        }
+
+        for (int t = 0; t < colors.length; t++) {
+            System.out.println(colors[t] + " : " + values[t]);
+        }
+        return colors;
     }
 }
