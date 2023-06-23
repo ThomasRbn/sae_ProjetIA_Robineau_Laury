@@ -1,23 +1,24 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class AlgoKMeans {
 
     public static void main(String[] args) {
         try {
-            if (args.length < 2) {
-                System.out.println("Usage: java AlgoKMeans <nbCouleurs> <nbIterations>");
+            long debut = System.currentTimeMillis();
+            if (args.length < 4) {
+                System.out.println("Usage: java AlgoKMeans <nbCouleurs> <nbIterations> <fichier> <sortie>");
                 System.exit(1);
             }
             int nbCoul = Integer.parseInt(args[0]);
             int nbIteration = Integer.parseInt(args[1]);
+            File fichier = new File(args[2]);
             int maxIterations = 100;
 
-            long debut = System.currentTimeMillis();
-
-            BufferedImage sourceImage = ImageIO.read(new File("images/copie.png"));
+            BufferedImage sourceImage = ImageIO.read(fichier);
 
             //Conversion de l'image en tableau de pixels avec leurs composantes RGB
             int width = sourceImage.getWidth();
@@ -88,7 +89,7 @@ public class AlgoKMeans {
             }
 
             // Remplacement des pixels par les couleurs des centres de cluster
-            BufferedImage destination = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            BufferedImage destination = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
             index = 0;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -111,11 +112,15 @@ public class AlgoKMeans {
                 }
             }
 
+
+
             // Enregistrer l'image de sortie
-            ImageIO.write(destination, "png", new File("images/copieKMeans_" + nbCoul + ".png"));
+            ImageIO.write(destination, "png", new File(args[3] + "/" + fichier.getName().split("\\.")[0] + "KMeans_" + nbCoul + ".png"));
             long fin = System.currentTimeMillis();
-            System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
-            System.out.println("Image sauvegardée dans le fichier images/copieKMeans_" + nbCoul + ".png");
+
+            if (!args[3].equals("tests")){
+                System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
