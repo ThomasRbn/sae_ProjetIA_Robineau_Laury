@@ -1,3 +1,5 @@
+package TP3;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -66,7 +68,7 @@ public class AlgoV2 {
 
         File fichierResultats = new File("resultatsExecution.txt");
         FileWriter writer = new FileWriter(fichierResultats);
-        writer.write("AlgoV2 " + nbCouleurs + " couleurs : " + (fin - debut) + " ms");
+        writer.write("TP3.AlgoV2 " + nbCouleurs + " couleurs : " + (fin - debut) + " ms");
         writer.close();
     }
 

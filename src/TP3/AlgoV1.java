@@ -11,9 +11,11 @@ import java.util.*;
 public class AlgoV1 {
 
     public static Map<Color, Integer> couleurs;
+    private int pas;
 
-    AlgoV1(){
+    AlgoV1(int pas ){
         couleurs = new HashMap<>();
+        this.pas = pas;
     }
 
     public void getAllColors(BufferedImage image){
@@ -46,7 +48,7 @@ public class AlgoV1 {
         int rgbmap = couleurMap.getRGB();
         int rgbcoul = couleur.getRGB();
        // System.out.printf("map : %d -- coul : %d%n", rgbmap, rgbcoul);
-        if((rgbcoul>rgbmap-1000) && (rgbcoul<rgbmap+1000)) return true;
+        if((rgbcoul>rgbmap-pas) && (rgbcoul<rgbmap+pas)) return true;
         return false;
     }
 
@@ -99,13 +101,22 @@ public class AlgoV1 {
 
 
     public static void main(String[] args) throws IOException {
-        BufferedImage image = ImageIO.read(new File("images/images_etudiants/originale.jpg"));
+
+        //nb color
+        int nbColor = 5;
+        int pas = 1000;
+        if(args.length>=1){
+            nbColor = Integer.parseInt(args[0]);
+            pas = Integer.parseInt(args[1]);
+        }
+
+        BufferedImage image = ImageIO.read(new File("images/originale.jpg"));
         BufferedImage destination = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 
-        AlgoV1 sae = new AlgoV1();
+        AlgoV1 sae = new AlgoV1(pas);
         sae.getAllColors(image);
         sae.afficherMap();
-        ArrayList<Color> topColor = sae.getTopColor(100);
+        ArrayList<Color> topColor = sae.getTopColor(nbColor);
 
         for (int x = 0; x<image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
@@ -125,7 +136,7 @@ public class AlgoV1 {
                 destination.setRGB(x, y, cRB);
             }
         }
-        ImageIO.write(destination, "PNG", new File("SAE.png"));
+        ImageIO.write(destination, "PNG", new File("images/AlgoV1"+ nbColor + "_" + pas + ".png"));
 
     }
 }

@@ -1,3 +1,5 @@
+package TP3;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
