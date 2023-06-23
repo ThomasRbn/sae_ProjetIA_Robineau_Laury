@@ -7,6 +7,14 @@ public class AlgoKMeans {
 
     public static void main(String[] args) {
         try {
+            if (args.length < 2) {
+                System.out.println("Usage: java AlgoKMeans <nbCouleurs> <nbIterations>");
+                System.exit(1);
+            }
+            int nbCoul = Integer.parseInt(args[0]);
+            int nbIteration = Integer.parseInt(args[1]);
+            int maxIterations = 100;
+
             long debut = System.currentTimeMillis();
 
             BufferedImage sourceImage = ImageIO.read(new File("images/copie.png"));
@@ -26,9 +34,6 @@ public class AlgoKMeans {
                 }
             }
 
-            int nbCoul = 20;
-            int nbIteration = 0;
-            int maxIterations = 100;
 
             // Appliquer l'algorithme de regroupement k-means
             float[][] centroides = new float[nbCoul][3];
@@ -110,6 +115,7 @@ public class AlgoKMeans {
             ImageIO.write(destination, "png", new File("images/copieKMeans_" + nbCoul + ".png"));
             long fin = System.currentTimeMillis();
             System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
+            System.out.println("Image sauvegardée dans le fichier images/copieKMeans_" + nbCoul + ".png");
 
         } catch (IOException e) {
             e.printStackTrace();

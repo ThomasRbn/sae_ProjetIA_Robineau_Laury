@@ -11,11 +11,17 @@ import java.util.HashMap;
 public class AlgoV2 {
 
     public static void main(String[] args) throws IOException {
+        if (args.length < 2) {
+            System.out.println("Usage: java AlgoV2 <nbCouleurs> <decomposition>");
+            System.exit(1);
+        }
+
+        int nbCouleurs = Integer.parseInt(args[0]) ;
+        int decomposition = Integer.parseInt(args[1]);
+
         long debut = System.currentTimeMillis();
         BufferedImage source = ImageIO.read(new File("images/copie.png"));
 
-        int decomposition = 64;
-        int nbCouleurs = 20;
         HashMap<Color, Integer> composition = new HashMap<>();
 
         for (int i = 0; i < 256; i += decomposition) {
@@ -25,8 +31,6 @@ public class AlgoV2 {
                 }
             }
         }
-
-//        System.out.println(composition);
 
         for (int x = 0; x < source.getWidth(); x++) {
             for (int y = 0; y < source.getHeight(); y++) {
@@ -62,6 +66,7 @@ public class AlgoV2 {
         ImageIO.write(destination, "png", new File("images/copieAlgoV2_" + decomposition + "_" + nbCouleurs + ".png"));
         long fin = System.currentTimeMillis();
         System.out.println("Temps d'exécution : " + (fin - debut) + " ms");
+        System.out.println("Image sauvegardée sous le nom : images/copieAlgoV2_" + decomposition + "_" + nbCouleurs + ".png");
     }
 
     public static Color getColorRange(Color c, HashMap<Color, Integer> range, int decomposition) {
