@@ -8,7 +8,6 @@ public class BatterieTests {
 
     public static void main(String[] args) {
 
-        //Photo fleur
         String[] chemins = {"images/copie.png", "images/venise.jpg"};
         String[] nbCouleurs = {"20", "50", "100"};
         String nbIterations = "100";
